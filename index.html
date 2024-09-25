@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Declaração</title>
+
+    <!-- Importando fontes do Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9f9f9;
+            text-align: center;
+            padding: 50px;
+            overflow-x: hidden; /* Evita rolagem horizontal */
+        }
+
+        p {
+            font-size: 24px;
+            margin: 20px;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: transform 1s ease-in-out, opacity 1s ease-in-out; /* Transição de deslizamento */
+        }
+
+        /* Aplica o efeito de slide-in e fade-in quando o texto é exibido */
+        .slide-in {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        button {
+            background-color: #ff69b4;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
+            transition: background-color 0.3s; /* Transição suave de cor */
+        }
+
+        button:hover {
+            background-color: #ff1493;
+        }
+
+        #nao {
+            position: relative;
+            transition: top 0.3s, left 0.3s;
+        }
+
+        /* Estilizando a pergunta final */
+        #pergunta p {
+            font-family: 'Dancing Script', cursive;
+            font-size: 32px;
+            color: #ff69b4;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Primeiros textos com animação de transição de slide -->
+    <div id="texto1">
+        <p class="slide-in">Você é a pessoa mais especial que já conheci...</p>
+        <button onclick="mostrarTexto2()">Próximo</button>
+    </div>
+
+    <div id="texto2" style="display:none;">
+        <p>Eu não consigo parar de pensar em você...</p>
+        <button onclick="mostrarTexto3()">Próximo</button>
+    </div>
+
+    <div id="texto3" style="display:none;">
+        <p>Agora, quero saber: você gosta de mim?</p>
+        <button onclick="mostrarPergunta()">Próximo</button>
+    </div>
+
+    <!-- Pergunta final com os botões -->
+    <div id="pergunta" style="display:none;">
+        <p class="slide-in">Você gosta de mim?</p>
+        <button onclick="respostaSim()">Sim</button>
+        <button id="nao" onmouseover="fugir()">Não</button>
+    </div>
+
+    <script>
+        // Função para adicionar a classe slide-in ao mostrar o texto
+        function adicionarSlideIn(id) {
+            document.querySelector(id).classList.add('slide-in');
+        }
+
+        // Funções para exibir os textos progressivamente com animação de slide
+        function mostrarTexto2() {
+            document.getElementById('texto1').style.display = 'none';
+            document.getElementById('texto2').style.display = 'block';
+            adicionarSlideIn('#texto2 p');
+        }
+
+        function mostrarTexto3() {
+            document.getElementById('texto2').style.display = 'none';
+            document.getElementById('texto3').style.display = 'block';
+            adicionarSlideIn('#texto3 p');
+        }
+
+        function mostrarPergunta() {
+            document.getElementById('texto3').style.display = 'none';
+            document.getElementById('pergunta').style.display = 'block';
+            adicionarSlideIn('#pergunta p');
+        }
+
+        // Resposta positiva
+        function respostaSim() {
+            alert("Eu sabia! 😍");
+        }
+
+        // Função para fazer o botão "Não" fugir do clique e ficar dentro da tela
+        function fugir() {
+            var botao = document.getElementById('nao');
+            var maxWidth = window.innerWidth - botao.offsetWidth;
+            var maxHeight = window.innerHeight - botao.offsetHeight;
+
+            // Gera novas posições aleatórias, mantendo o botão dentro da tela
+            var newTop = Math.random() * maxHeight;
+            var newLeft = Math.random() * maxWidth;
+
+            botao.style.position = 'absolute';
+            botao.style.top = newTop + "px";
+            botao.style.left = newLeft + "px";
+        }
+    </script>
+
+</body>
+</html>
