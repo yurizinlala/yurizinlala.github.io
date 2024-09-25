@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Declaração</title>
+    <title>um site qualquer</title>
 
     <!-- Importando fontes do Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300&display=swap" rel="stylesheet">
@@ -13,8 +13,13 @@
             font-family: 'Poppins', sans-serif;
             background-color: #f9f9f9;
             text-align: center;
-            padding: 50px;
-            overflow-x: hidden; /* Evita rolagem horizontal */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
         }
 
         p {
@@ -58,32 +63,52 @@
             font-size: 32px;
             color: #ff69b4;
         }
+
+        /* Centraliza e ajusta o tamanho do GIF */
+        #gif-amor {
+            display: none;
+            margin-top: 20px;
+            width: 300px;
+        }
     </style>
 </head>
 <body>
 
     <!-- Primeiros textos com animação de transição de slide -->
     <div id="texto1">
-        <p class="slide-in">Você é a pessoa mais especial que já conheci...</p>
-        <button onclick="mostrarTexto2()">Próximo</button>
+        <p class="slide-in">seguinte parceiro, você é a pessoa mais chata que eu conheço.</p>
+        <button onclick="mostrarTexto2()">hmm, massa</button>
     </div>
 
     <div id="texto2" style="display:none;">
-        <p>Eu não consigo parar de pensar em você...</p>
-        <button onclick="mostrarTexto3()">Próximo</button>
+        <p>só consegue ser insuportável e alguém extremamente dificil de se ter por perto</p>
+        <button onclick="mostrarTexto3()">blz</button>
     </div>
 
     <div id="texto3" style="display:none;">
-        <p>Agora, quero saber: você gosta de mim?</p>
-        <button onclick="mostrarPergunta()">Próximo</button>
+        <p>e é por esse exato que queria te perguntar</p>
+        <button onclick="mostrarPergunta()">oq?</button>
     </div>
 
     <!-- Pergunta final com os botões -->
     <div id="pergunta" style="display:none;">
-        <p class="slide-in">Você gosta de mim?</p>
-        <button onclick="respostaSim()">Sim</button>
-        <button id="nao" onmouseover="fugir()">Não</button>
+        <p class="slide-in">tu gosta de mim?</p>
+        <button onclick="respostaSim()">com certeza 😍</button>
+        <button id="nao" onmouseover="fugir()" ontouchstart="fugir()">nau</button>
     </div>
+
+    <!-- GIF de confirmação -->
+    <img id="gif-amor" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzk1OGJlZjhnNDB5OWJmNjUyaXJ4ajJxbm91dG80Mml3ODM4bjF2dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/enrq327a3sMIJAS5jA/giphy.webp" alt="te amo">
+
+    <!-- Música de fundo -->
+    <audio id="musicaFundo" autoplay loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Efeito sonoro para o clique -->
+    <audio id="somClique">
+        <source src="https://www.soundjay.com/button/beep-07.wav" type="audio/wav">
+    </audio>
 
     <script>
         // Função para adicionar a classe slide-in ao mostrar o texto
@@ -93,26 +118,31 @@
 
         // Funções para exibir os textos progressivamente com animação de slide
         function mostrarTexto2() {
+            tocarSom(); // Toca som ao clicar no botão
             document.getElementById('texto1').style.display = 'none';
             document.getElementById('texto2').style.display = 'block';
             adicionarSlideIn('#texto2 p');
         }
 
         function mostrarTexto3() {
+            tocarSom(); // Toca som ao clicar no botão
             document.getElementById('texto2').style.display = 'none';
             document.getElementById('texto3').style.display = 'block';
             adicionarSlideIn('#texto3 p');
         }
 
         function mostrarPergunta() {
+            tocarSom(); // Toca som ao clicar no botão
             document.getElementById('texto3').style.display = 'none';
             document.getElementById('pergunta').style.display = 'block';
             adicionarSlideIn('#pergunta p');
         }
 
-        // Resposta positiva
+        // Resposta positiva - exibe o GIF
         function respostaSim() {
-            alert("Eu sabia! 😍");
+            tocarSom(); // Toca som ao clicar no botão
+            alert("eu sabia 😍");
+            document.getElementById('gif-amor').style.display = 'block';
         }
 
         // Função para fazer o botão "Não" fugir do clique e ficar dentro da tela
@@ -128,6 +158,12 @@
             botao.style.position = 'absolute';
             botao.style.top = newTop + "px";
             botao.style.left = newLeft + "px";
+        }
+
+        // Função para tocar o efeito sonoro ao clicar nos botões
+        function tocarSom() {
+            var som = document.getElementById("somClique");
+            som.play();
         }
     </script>
 
