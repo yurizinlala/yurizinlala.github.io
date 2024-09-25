@@ -77,7 +77,7 @@
     <!-- Primeiros textos com animação de transição de slide -->
     <div id="texto1">
         <p class="slide-in">seguinte parceiro, você é a pessoa mais chata que eu conheço.</p>
-        <button onclick="mostrarTexto2()">hmm, massa</button>
+        <button onclick="iniciarMusica(); mostrarTexto2()">hmm, massa</button>
     </div>
 
     <div id="texto2" style="display:none;">
@@ -101,7 +101,7 @@
     <img id="gif-amor" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzk1OGJlZjhnNDB5OWJmNjUyaXJ4ajJxbm91dG80Mml3ODM4bjF2dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/enrq327a3sMIJAS5jA/giphy.webp" alt="te amo">
 
     <!-- Música de fundo -->
-    <audio id="musicaFundo" autoplay>
+    <audio id="musicaFundo">
         <source src="musica.mp3" type="audio/mpeg">
     </audio>
 
@@ -111,6 +111,12 @@
     </audio>
 
     <script>
+        // Função para iniciar a música de fundo
+        function iniciarMusica() {
+            var musica = document.getElementById('musicaFundo');
+            musica.play();
+        }
+        
         // Função para adicionar a classe slide-in ao mostrar o texto
         function adicionarSlideIn(id) {
             document.querySelector(id).classList.add('slide-in');
@@ -161,10 +167,14 @@
         }
 
         // Função para tocar o efeito sonoro ao clicar nos botões
+        var somClique = new Audio("som-clicar.mp3");
+
+        // Função para tocar o efeito sonoro ao clicar nos botões
         function tocarSom() {
-            var som = document.getElementById("somClique");
-            som.play();
-        }
+          // Reinicia o som para que ele toque desde o início
+          somClique.currentTime = 0;
+          somClique.play();
+        }    
     </script>
 
 </body>
