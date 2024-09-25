@@ -166,15 +166,22 @@
             botao.style.left = newLeft + "px";
         }
 
-        // Função para tocar o efeito sonoro ao clicar nos botões
+        // Criar um elemento de áudio apenas uma vez
         var somClique = new Audio("som-clicar.mp3");
-
+        
         // Função para tocar o efeito sonoro ao clicar nos botões
         function tocarSom() {
-          // Reinicia o som para que ele toque desde o início
+          // Reiniciar o som para que ele toque desde o início
           somClique.currentTime = 0;
-          somClique.play();
-        }    
+          // Verificar se o som já está tocando
+          if (!somClique.paused) {
+            // Se estiver tocando, reiniciar a reprodução
+            somClique.currentTime = 0;
+          } else {
+            // Se não estiver tocando, iniciar a reprodução
+            somClique.play();
+          }
+        }
     </script>
 
 </body>
