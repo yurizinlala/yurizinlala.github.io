@@ -110,6 +110,10 @@
         <source src="som-clicar.mp3" type="audio/mpeg">
     </audio>
 
+    <audio id="somClique2">
+        <source src="som-top.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
         // Função para iniciar a música de fundo
         function iniciarMusica() {
@@ -146,13 +150,14 @@
 
         // Resposta positiva - exibe o GIF
         function respostaSim() {
-            tocarSom(); // Toca som ao clicar no botão
+            tocarSom2();
             alert("eu sabia 😍");
             document.getElementById('gif-amor').style.display = 'block';
         }
 
         // Função para fazer o botão "Não" fugir do clique e ficar dentro da tela
         function fugir() {
+            tocarSom();
             var botao = document.getElementById('nao');
             var maxWidth = window.innerWidth - botao.offsetWidth;
             var maxHeight = window.innerHeight - botao.offsetHeight;
@@ -168,18 +173,24 @@
 
         // Criar um elemento de áudio apenas uma vez
         var somClique = new Audio("som-clicar.mp3");
+        var somClique2 = new Audio("som-top.mp3");
         
         // Função para tocar o efeito sonoro ao clicar nos botões
         function tocarSom() {
-          // Reiniciar o som para que ele toque desde o início
           somClique.currentTime = 0;
-          // Verificar se o som já está tocando
           if (!somClique.paused) {
-            // Se estiver tocando, reiniciar a reprodução
             somClique.currentTime = 0;
           } else {
-            // Se não estiver tocando, iniciar a reprodução
             somClique.play();
+          }
+        }
+
+        function tocarSom2() {
+          somClique2.currentTime = 0;
+          if (!somClique2.paused) {
+            somClique2.currentTime = 0;
+          } else {
+            somClique2.play();
           }
         }
     </script>
