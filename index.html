@@ -76,7 +76,7 @@
 
     <!-- Primeiros textos com animação de transição de slide -->
     <div id="texto1">
-        <p class="slide-in">seguinte layza, você é a pessoa mais chata que eu conheço.</p>
+        <p class="slide-in">seguinte flor, você é a pessoa mais chata que eu conheço.</p>
         <button onclick="iniciarMusica(); mostrarTexto2()">hmm, massa</button>
     </div>
 
@@ -92,8 +92,8 @@
 
     <!-- Pergunta final com os botões -->
     <div id="pergunta" style="display:none;">
-        <p class="slide-in">tu gosta de mim?</p>
-        <button onclick="respostaSim()">com certeza 😍</button>
+        <p class="slide-in">tu gosta mesmo de mim?</p>
+        <button onclick="respostaSim()">com certeza</button>
         <button id="nao" onmouseover="fugir()" ontouchstart="fugir()">nau</button>
     </div>
 
@@ -151,7 +151,7 @@
         // Resposta positiva - exibe o GIF
         function respostaSim() {
             tocarSom2();
-            alert("eu sabia 😍");
+            alert("eu sabia");
             document.getElementById('gif-amor').style.display = 'block';
         }
 
