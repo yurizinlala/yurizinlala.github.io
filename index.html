@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,12 +9,16 @@
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      background-color: #f5f5f5;
+      background-color: #f9f9f9;
       margin: 0;
       padding: 0;
     }
     h1 {
-      color: #333;
+      color: #444;
+      margin-top: 20px;
+    }
+    p {
+      color: #666;
     }
     #reader {
       width: 300px;
@@ -28,15 +32,23 @@
       transform: translate(-50%, -50%);
       padding: 20px;
       background: #fff;
+      border: 2px solid #007BFF;
       border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 80%;
+      max-width: 400px;
+      z-index: 1000;
     }
     #popup h2 {
       margin-top: 0;
+      color: #007BFF;
+    }
+    #popup p {
+      color: #333;
     }
     #popup button {
-      margin-top: 10px;
-      padding: 10px 15px;
+      margin-top: 15px;
+      padding: 10px 20px;
       background-color: #007BFF;
       color: #fff;
       border: none;
@@ -46,6 +58,16 @@
     #popup button:hover {
       background-color: #0056b3;
     }
+    #overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
   </style>
 </head>
 <body>
@@ -54,6 +76,7 @@
   <div id="reader"></div>
 
   <!-- Pop-up -->
+  <div id="overlay"></div>
   <div id="popup">
     <h2>Próxima Dica</h2>
     <p id="hint-text"></p>
@@ -61,41 +84,45 @@
   </div>
 
   <script>
-    // Dicas mapeadas para cada QR Code (substitua os valores pelas suas URLs)
+    // Mapeamento de QR Codes para as dicas
     const hints = {
-      "https://dica1.com": "Siga em direção à praia famosa onde o amor sempre ganha destaque.",
-      "https://dica2.com": "Memórias especiais estão guardadas onde dois corações se encontraram.",
-      "https://dicafinal.com": "Parabéns! O maior tesouro está bem aqui esperando por você."
+      "https://dica1.com": "Siga em direção ao mirante e observe o mar para a próxima pista.",
+      "https://dica2.com": "Procure pelo banco onde costumávamos assistir o pôr do sol.",
+      "https://dicafinal.com": "Parabéns! O maior tesouro está aqui. Você está pronta para um novo capítulo?"
     };
 
-    // Inicializa o leitor de QR Code
+    // Função de sucesso ao escanear o QR Code
     function onScanSuccess(decodedText, decodedResult) {
-      // Mostra a dica correspondente
       if (hints[decodedText]) {
-        showPopup(hints[decodedText]);
+        showPopup(hints[decodedText]); // Mostra a dica correspondente
       } else {
-        alert("QR Code não reconhecido. Tente novamente.");
+        alert("QR Code não reconhecido. Tente novamente!");
       }
     }
 
+    // Função de erro ao escanear
     function onScanFailure(error) {
-      // Opcional: trate erros de escaneamento aqui
+      // Podemos tratar erros aqui, se necessário
     }
 
+    // Inicializa o leitor de QR Code
     const html5QrcodeScanner = new Html5QrcodeScanner(
-      "reader",
+      "reader", 
       { fps: 10, qrbox: 250 }
     );
     html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 
-    // Funções para o pop-up
+    // Exibe o pop-up com a dica
     function showPopup(hint) {
       document.getElementById("hint-text").innerText = hint;
+      document.getElementById("overlay").style.display = "block";
       document.getElementById("popup").style.display = "block";
     }
 
+    // Fecha o pop-up
     function closePopup() {
       document.getElementById("popup").style.display = "none";
+      document.getElementById("overlay").style.display = "none";
     }
   </script>
 </body>
