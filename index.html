@@ -21,8 +21,22 @@
       color: #666;
     }
     #reader {
+      display: none;
       width: 300px;
       margin: 20px auto;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #007BFF;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
     }
     #popup {
       display: none;
@@ -72,7 +86,8 @@
 </head>
 <body>
   <h1>Caça ao Tesouro</h1>
-  <p>Escaneie o QR Code para receber a próxima dica!</p>
+  <p>Pressione o botão abaixo para começar a escanear o QR Code.</p>
+  <button onclick="startScanning()">Scanear QR Code</button>
   <div id="reader"></div>
 
   <!-- Pop-up -->
@@ -91,26 +106,47 @@
       "https://dicafinal.com": "Parabéns! O maior tesouro está aqui. Você está pronta para um novo capítulo?"
     };
 
-    // Função de sucesso ao escanear o QR Code
-    function onScanSuccess(decodedText, decodedResult) {
-      if (hints[decodedText]) {
-        showPopup(hints[decodedText]); // Mostra a dica correspondente
-      } else {
-        alert("QR Code não reconhecido. Tente novamente!");
-      }
-    }
-
-    // Função de erro ao escanear
-    function onScanFailure(error) {
-      // Podemos tratar erros aqui, se necessário
-    }
-
     // Inicializa o leitor de QR Code
-    const html5QrcodeScanner = new Html5QrcodeScanner(
-      "reader", 
-      { fps: 10, qrbox: 250 }
-    );
-    html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    let qrCodeScanner;
+
+    function startScanning() {
+      const reader = document.getElementById("reader");
+      const button = document.querySelector("button");
+      
+      // Exibe o scanner
+      reader.style.display = "block";
+      button.style.display = "none";
+
+      // Cria e renderiza o scanner
+      qrCodeScanner = new Html5Qrcode("reader");
+      qrCodeScanner.start(
+        { facingMode: "environment" }, // Usa a câmera traseira
+        { fps: 10, qrbox: 250 },
+        (decodedText) => {
+          if (hints[decodedText]) {
+            showPopup(hints[decodedText]); // Mostra a dica correspondente
+            stopScanning(); // Para o scanner após ler o QR Code
+          } else {
+            alert("QR Code não reconhecido. Tente novamente!");
+          }
+        },
+        (error) => {
+          console.error("Erro ao escanear:", error);
+        }
+      ).catch((err) => {
+        console.error("Erro ao iniciar câmera:", err);
+        alert("Erro ao acessar a câmera. Verifique as permissões.");
+      });
+    }
+
+    function stopScanning() {
+      qrCodeScanner.stop().then(() => {
+        document.getElementById("reader").style.display = "none";
+        document.querySelector("button").style.display = "block";
+      }).catch((err) => {
+        console.error("Erro ao parar o scanner:", err);
+      });
+    }
 
     // Exibe o pop-up com a dica
     function showPopup(hint) {
