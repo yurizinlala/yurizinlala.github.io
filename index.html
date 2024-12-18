@@ -106,37 +106,41 @@
       "https://dicafinal.com": "Parabéns! O maior tesouro está aqui. Você está pronta para um novo capítulo?"
     };
 
-    // Inicializa o leitor de QR Code
     let qrCodeScanner;
 
     function startScanning() {
       const reader = document.getElementById("reader");
       const button = document.querySelector("button");
-      
+
       // Exibe o scanner
       reader.style.display = "block";
       button.style.display = "none";
 
-      // Cria e renderiza o scanner
-      qrCodeScanner = new Html5Qrcode("reader");
-      qrCodeScanner.start(
-        { facingMode: "environment" }, // Usa a câmera traseira
-        { fps: 10, qrbox: 250 },
-        (decodedText) => {
-          if (hints[decodedText]) {
-            showPopup(hints[decodedText]); // Mostra a dica correspondente
-            stopScanning(); // Para o scanner após ler o QR Code
-          } else {
-            alert("QR Code não reconhecido. Tente novamente!");
+      try {
+        // Cria e renderiza o scanner
+        qrCodeScanner = new Html5Qrcode("reader");
+        qrCodeScanner.start(
+          { facingMode: "environment" }, // Usa a câmera traseira
+          { fps: 10, qrbox: 250 },
+          (decodedText) => {
+            if (hints[decodedText]) {
+              showPopup(hints[decodedText]); // Mostra a dica correspondente
+              stopScanning(); // Para o scanner após ler o QR Code
+            } else {
+              alert("QR Code não reconhecido. Tente novamente!");
+            }
+          },
+          (error) => {
+            console.error("Erro ao escanear:", error);
           }
-        },
-        (error) => {
-          console.error("Erro ao escanear:", error);
-        }
-      ).catch((err) => {
-        console.error("Erro ao iniciar câmera:", err);
-        alert("Erro ao acessar a câmera. Verifique as permissões.");
-      });
+        ).catch((err) => {
+          console.error("Erro ao iniciar câmera:", err);
+          alert("Erro ao acessar a câmera. Verifique as permissões.");
+        });
+      } catch (e) {
+        alert("Erro ao configurar o leitor de QR Code. Tente novamente.");
+        console.error(e);
+      }
     }
 
     function stopScanning() {
