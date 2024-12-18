@@ -1,199 +1,102 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>um site qualquer</title>
-
-    <!-- Importando fontes do Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300&display=swap" rel="stylesheet">
-
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #ffb8f4;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-        }
-
-        p {
-            font-size: 24px;
-            margin: 20px;
-            opacity: 0;
-            transform: translateX(100%);
-            transition: transform 1s ease-in-out, opacity 1s ease-in-out; /* Transição de deslizamento */
-        }
-
-        /* Aplica o efeito de slide-in e fade-in quando o texto é exibido */
-        .slide-in {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        button {
-            background-color: #ff69b4;
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-            margin: 5px;
-            transition: background-color 0.3s; /* Transição suave de cor */
-        }
-
-        button:hover {
-            background-color: #ff1493;
-        }
-
-        #nao {
-            position: relative;
-            transition: top 0.3s, left 0.3s;
-        }
-
-        /* Estilizando a pergunta final */
-        #pergunta p {
-            font-family: 'Dancing Script', cursive;
-            font-size: 32px;
-            color: #ff69b4;
-        }
-
-        /* Centraliza e ajusta o tamanho do GIF */
-        #gif-amor {
-            display: none;
-            margin-top: 20px;
-            width: 300px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Caça ao Tesouro</title>
+  <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      color: #333;
+    }
+    #reader {
+      width: 300px;
+      margin: 20px auto;
+    }
+    #popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    #popup h2 {
+      margin-top: 0;
+    }
+    #popup button {
+      margin-top: 10px;
+      padding: 10px 15px;
+      background-color: #007BFF;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #popup button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
+  <h1>Caça ao Tesouro</h1>
+  <p>Escaneie o QR Code para receber a próxima dica!</p>
+  <div id="reader"></div>
 
-    <!-- Primeiros textos com animação de transição de slide -->
-    <div id="texto1">
-        <p class="slide-in">seguinte flor, você é a pessoa mais chata que eu conheço.</p>
-        <button onclick="iniciarMusica(); mostrarTexto2()">hmm, massa</button>
-    </div>
+  <!-- Pop-up -->
+  <div id="popup">
+    <h2>Próxima Dica</h2>
+    <p id="hint-text"></p>
+    <button onclick="closePopup()">Fechar</button>
+  </div>
 
-    <div id="texto2" style="display:none;">
-        <p>só consegue ser insuportável e alguém extremamente dificil de se ter por perto</p>
-        <button onclick="mostrarTexto3()">blz</button>
-    </div>
+  <script>
+    // Dicas mapeadas para cada QR Code (substitua os valores pelas suas URLs)
+    const hints = {
+      "https://dica1.com": "Siga em direção à praia famosa onde o amor sempre ganha destaque.",
+      "https://dica2.com": "Memórias especiais estão guardadas onde dois corações se encontraram.",
+      "https://dicafinal.com": "Parabéns! O maior tesouro está bem aqui esperando por você."
+    };
 
-    <div id="texto3" style="display:none;">
-        <p>e é por esse exato que queria te perguntar</p>
-        <button onclick="mostrarPergunta()">oq?</button>
-    </div>
+    // Inicializa o leitor de QR Code
+    function onScanSuccess(decodedText, decodedResult) {
+      // Mostra a dica correspondente
+      if (hints[decodedText]) {
+        showPopup(hints[decodedText]);
+      } else {
+        alert("QR Code não reconhecido. Tente novamente.");
+      }
+    }
 
-    <!-- Pergunta final com os botões -->
-    <div id="pergunta" style="display:none;">
-        <p class="slide-in">tu gosta mesmo de mim?</p>
-        <button onclick="respostaSim()">com certeza</button>
-        <button id="nao" onmouseover="fugir()" ontouchstart="fugir()">nau</button>
-    </div>
+    function onScanFailure(error) {
+      // Opcional: trate erros de escaneamento aqui
+    }
 
-    <!-- GIF de confirmação -->
-    <img id="gif-amor" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzk1OGJlZjhnNDB5OWJmNjUyaXJ4ajJxbm91dG80Mml3ODM4bjF2dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/enrq327a3sMIJAS5jA/giphy.webp" alt="te amo">
+    const html5QrcodeScanner = new Html5QrcodeScanner(
+      "reader",
+      { fps: 10, qrbox: 250 }
+    );
+    html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 
-    <!-- Música de fundo -->
-    <audio id="musicaFundo">
-        <source src="musica.mp3" type="audio/mpeg">
-    </audio>
+    // Funções para o pop-up
+    function showPopup(hint) {
+      document.getElementById("hint-text").innerText = hint;
+      document.getElementById("popup").style.display = "block";
+    }
 
-    <!-- Efeito sonoro armazenado localmente -->
-    <audio id="somClique">
-        <source src="som-clicar.mp3" type="audio/mpeg">
-    </audio>
-
-    <audio id="somClique2">
-        <source src="som-top.mp3" type="audio/mpeg">
-    </audio>
-
-    <script>
-        // Função para iniciar a música de fundo
-        function iniciarMusica() {
-            var musica = document.getElementById('musicaFundo');
-            musica.play();
-        }
-        
-        // Função para adicionar a classe slide-in ao mostrar o texto
-        function adicionarSlideIn(id) {
-            document.querySelector(id).classList.add('slide-in');
-        }
-
-        // Funções para exibir os textos progressivamente com animação de slide
-        function mostrarTexto2() {
-            tocarSom(); // Toca som ao clicar no botão
-            document.getElementById('texto1').style.display = 'none';
-            document.getElementById('texto2').style.display = 'block';
-            adicionarSlideIn('#texto2 p');
-        }
-
-        function mostrarTexto3() {
-            tocarSom(); // Toca som ao clicar no botão
-            document.getElementById('texto2').style.display = 'none';
-            document.getElementById('texto3').style.display = 'block';
-            adicionarSlideIn('#texto3 p');
-        }
-
-        function mostrarPergunta() {
-            tocarSom(); // Toca som ao clicar no botão
-            document.getElementById('texto3').style.display = 'none';
-            document.getElementById('pergunta').style.display = 'block';
-            adicionarSlideIn('#pergunta p');
-        }
-
-        // Resposta positiva - exibe o GIF
-        function respostaSim() {
-            tocarSom2();
-            alert("eu sabia");
-            document.getElementById('gif-amor').style.display = 'block';
-        }
-
-        // Função para fazer o botão "Não" fugir do clique e ficar dentro da tela
-        function fugir() {
-            tocarSom();
-            var botao = document.getElementById('nao');
-            var maxWidth = window.innerWidth - botao.offsetWidth;
-            var maxHeight = window.innerHeight - botao.offsetHeight;
-
-            // Gera novas posições aleatórias, mantendo o botão dentro da tela
-            var newTop = Math.random() * maxHeight;
-            var newLeft = Math.random() * maxWidth;
-
-            botao.style.position = 'absolute';
-            botao.style.top = newTop + "px";
-            botao.style.left = newLeft + "px";
-        }
-
-        // Criar um elemento de áudio apenas uma vez
-        var somClique = new Audio("som-clicar.mp3");
-        var somClique2 = new Audio("som-top.mp3");
-        
-        // Função para tocar o efeito sonoro ao clicar nos botões
-        function tocarSom() {
-          somClique.currentTime = 0;
-          if (!somClique.paused) {
-            somClique.currentTime = 0;
-          } else {
-            somClique.play();
-          }
-        }
-
-        function tocarSom2() {
-          somClique2.currentTime = 0;
-          if (!somClique2.paused) {
-            somClique2.currentTime = 0;
-          } else {
-            somClique2.play();
-          }
-        }
-    </script>
-
+    function closePopup() {
+      document.getElementById("popup").style.display = "none";
+    }
+  </script>
 </body>
 </html>
