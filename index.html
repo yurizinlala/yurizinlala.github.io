@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scanner de QR Code</title>
-    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <script src="https://unpkg.com/qr-scanner/qr-scanner.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             margin: 20px;
         }
-        #reader {
+        #video {
             width: 300px;
             height: 300px;
-            margin: auto;
             border: 1px solid #ccc;
+            margin: auto;
         }
         #popup {
             display: none;
@@ -43,7 +43,7 @@
 <body>
 
     <h1>Scanner de QR Code</h1>
-    <div id="reader"></div>
+    <video id="video"></video>
 
     <div id="overlay"></div>
     <div id="popup">
@@ -63,11 +63,10 @@
             document.getElementById('popup').style.display = 'none';
         }
 
-        const html5QrCode = new Html5Qrcode("reader");
-
-        const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+        const video = document.getElementById('video');
+        const qrScanner = new QrScanner(video, result => {
             // Dependendo do QR code, exiba uma mensagem diferente
-            switch (decodedText) {
+            switch (result) {
                 case "codigo1":
                     openPopup("Você escaneou o código 1!");
                     break;
@@ -80,18 +79,13 @@
                 default:
                     openPopup("Código QR desconhecido!");
             }
-        };
-
-        const config = { fps: 10, qrbox: 250 };
+        });
 
         // Iniciar o scanner
-        html5QrCode.start(
-            { facingMode: "environment" }, // Usar a câmera traseira
-            config,
-            qrCodeSuccessCallback)
-        .catch(err => {
-            console.error("Erro ao iniciar o scanner: ", err);
-        });
+        qrScanner.start()
+            .catch(err => {
+                console.error("Erro ao iniciar o scanner: ", err);
+            });
     </script>
 
 </body>
