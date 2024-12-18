@@ -1,169 +1,96 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Caça ao Tesouro</title>
-  <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #f9f9f9;
-      margin: 0;
-      padding: 0;
-    }
-    h1 {
-      color: #444;
-      margin-top: 20px;
-    }
-    p {
-      color: #666;
-    }
-    #reader {
-      display: none;
-      width: 300px;
-      margin: 20px auto;
-    }
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background-color: #007BFF;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    #popup {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      padding: 20px;
-      background: #fff;
-      border: 2px solid #007BFF;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      width: 80%;
-      max-width: 400px;
-      z-index: 1000;
-    }
-    #popup h2 {
-      margin-top: 0;
-      color: #007BFF;
-    }
-    #popup p {
-      color: #333;
-    }
-    #popup button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      background-color: #007BFF;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    #popup button:hover {
-      background-color: #0056b3;
-    }
-    #overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 999;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scanner de QR Code</title>
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        #reader {
+            width: 300px;
+            height: 300px;
+            margin: auto;
+        }
+        #popup {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+            z-index: 1000;
+        }
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+    </style>
 </head>
 <body>
-  <h1>Caça ao Tesouro</h1>
-  <p>Pressione o botão abaixo para começar a escanear o QR Code.</p>
-  <button onclick="startScanning()">Scanear QR Code</button>
-  <div id="reader"></div>
 
-  <!-- Pop-up -->
-  <div id="overlay"></div>
-  <div id="popup">
-    <h2>Próxima Dica</h2>
-    <p id="hint-text"></p>
-    <button onclick="closePopup()">Fechar</button>
-  </div>
+    <h1>Scanner de QR Code</h1>
+    <div id="reader"></div>
 
-  <script>
-    // Mapeamento de QR Codes para as dicas
-    const hints = {
-      "https://dica1.com": "Siga em direção ao mirante e observe o mar para a próxima pista.",
-      "https://dica2.com": "Procure pelo banco onde costumávamos assistir o pôr do sol.",
-      "https://dicafinal.com": "Parabéns! O maior tesouro está aqui. Você está pronta para um novo capítulo?"
-    };
+    <div id="overlay"></div>
+    <div id="popup">
+        <p id="popup-message"></p>
+        <button onclick="closePopup()">Fechar</button>
+    </div>
 
-    let qrCodeScanner;
+    <script>
+        function openPopup(message) {
+            document.getElementById('popup-message').innerText = message;
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('popup').style.display = 'block';
+        }
 
-    function startScanning() {
-      const reader = document.getElementById("reader");
-      const button = document.querySelector("button");
+        function closePopup() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('popup').style.display = 'none';
+        }
 
-      // Exibe o scanner
-      reader.style.display = "block";
-      button.style.display = "none";
+        const html5QrCode = new Html5Qrcode("reader");
 
-      try {
-        // Cria e renderiza o scanner
-        qrCodeScanner = new Html5Qrcode("reader");
-        qrCodeScanner.start(
-          { facingMode: "environment" }, // Usa a câmera traseira
-          { fps: 10, qrbox: 250 },
-          (decodedText) => {
-            if (hints[decodedText]) {
-              showPopup(hints[decodedText]); // Mostra a dica correspondente
-              stopScanning(); // Para o scanner após ler o QR Code
-            } else {
-              alert("QR Code não reconhecido. Tente novamente!");
+        const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+            // Dependendo do QR code, exiba uma mensagem diferente
+            switch (decodedText) {
+                case "codigo1":
+                    openPopup("Você escaneou o código 1!");
+                    break;
+                case "codigo2":
+                    openPopup("Você escaneou o código 2!");
+                    break;
+                case "codigo3":
+                    openPopup("Você escaneou o código 3!");
+                    break;
+                default:
+                    openPopup("Código QR desconhecido!");
             }
-          },
-          (error) => {
-            console.error("Erro ao escanear:", error);
-          }
-        ).catch((err) => {
-          console.error("Erro ao iniciar câmera:", err);
-          alert("Erro ao acessar a câmera. Verifique as permissões.");
+        };
+
+        const config = { fps: 10, qrbox: 250 };
+
+        html5QrCode.start(
+            { facingMode: "environment" }, // Use a câmera traseira
+            config,
+            qrCodeSuccessCallback)
+        .catch(err => {
+            console.error("Erro ao iniciar o scanner: ", err);
         });
-      } catch (e) {
-        alert("Erro ao configurar o leitor de QR Code. Tente novamente.");
-        console.error(e);
-      }
-    }
+    </script>
 
-    function stopScanning() {
-      qrCodeScanner.stop().then(() => {
-        document.getElementById("reader").style.display = "none";
-        document.querySelector("button").style.display = "block";
-      }).catch((err) => {
-        console.error("Erro ao parar o scanner:", err);
-      });
-    }
-
-    // Exibe o pop-up com a dica
-    function showPopup(hint) {
-      document.getElementById("hint-text").innerText = hint;
-      document.getElementById("overlay").style.display = "block";
-      document.getElementById("popup").style.display = "block";
-    }
-
-    // Fecha o pop-up
-    function closePopup() {
-      document.getElementById("popup").style.display = "none";
-      document.getElementById("overlay").style.display = "none";
-    }
-  </script>
 </body>
 </html>
