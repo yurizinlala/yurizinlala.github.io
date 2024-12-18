@@ -15,6 +15,7 @@
             width: 300px;
             height: 300px;
             margin: auto;
+            border: 1px solid #ccc;
         }
         #popup {
             display: none;
@@ -83,8 +84,9 @@
 
         const config = { fps: 10, qrbox: 250 };
 
+        // Iniciar o scanner
         html5QrCode.start(
-            { facingMode: "environment" }, // Use a câmera traseira
+            { facingMode: "environment" }, // Usar a câmera traseira
             config,
             qrCodeSuccessCallback)
         .catch(err => {
